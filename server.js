@@ -17,7 +17,7 @@ app.use(cors({
   credentials: true, 
 }));
 
-
+//console.log("olá");
 app.use(express.json());
 
 // Rota de teste simples
