@@ -124,20 +124,35 @@ exports.sendCandidatura = async (req, res) => {
     // --- ENVIAR E-MAIL DE CONFIRMAÇÃO AO CANDIDATO ---
     try {
       const infoCandidato = await transporterConfirmacao.sendMail({
-        from: process.env.CONFIRMATION_EMAIL_USER,
-        to: email,
-        subject: `Confirmação de Candidatura Recebida - ${jobTitle} - J. P. Rodrigues`,
-        html: `
-          <p>Olá ${name},</p>
-          <p>Agradecemos a sua candidatura à vaga de <b>${jobTitle}</b> na J. P. Rodrigues.</p>
-          <p>Recebemos os seus dados e o seu CV com sucesso. A sua candidatura está a ser revista pela nossa equipa de recrutamento.</p>
-          <p>Entraremos em contacto consigo caso o seu perfil se adeque aos nossos requisitos.</p>
-          <p>Com os melhores cumprimentos,</p>
-          <p>A Equipa de Recrutamento J. P. Rodrigues</p>
-          <hr/>
-          <p><small>Este é um e-mail automático, por favor não responda.</small></p>
+      from: `"JPC Rodrigues Website" <${process.env.CONFIRMATION_EMAIL_USER}>`,
+      to: email,
+      subject: `Confirmação de Candidatura Recebida - ${jobTitle} - J. P. Rodrigues`,
+      html: `
+        <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; border: 1px solid #ddd; border-radius: 8px; overflow: hidden;">
+          <div style="background-color: #0d47a1; padding: 20px; text-align: center;">
+          </div>
+
+          <div style="padding: 25px;">
+            <p style="font-size: 16px;">Olá ${name},</p>
+
+            <p style="font-size: 16px;">Agradecemos a sua candidatura à vaga de <strong>${jobTitle}</strong> na J. P. Rodrigues.</p>
+
+            <p style="font-size: 16px;">Recebemos os seus dados e o seu CV com sucesso. A sua candidatura está a ser revista pela nossa equipa de recrutamento.</p>
+
+            <p style="font-size: 16px;">Entraremos em contacto consigo caso o seu perfil se adeque aos nossos requisitos. Pedimos a sua compreensão, pois apenas os candidatos selecionados para a próxima fase serão contactados.</p>
+
+            <p style="font-size: 16px; margin-top: 25px;">Com os melhores cumprimentos,</p>
+            <p style="font-size: 16px; margin-bottom: 5px;">A Equipa de Recrutamento J. P. Rodrigues</p>
+          </div>
+
+          <div style="border-top: 1px solid #eee; padding: 20px; text-align: center; background-color: #f9f9f9; font-size: 12px; color: #777;">
+            <p style="margin: 0;"><small>Este é um e-mail automático, por favor não responda.</small></p>
+            <p style="margin: 5px 0 0;">© 2025 JPC Rodrigues. Todos os direitos reservados.</p>
+            <p style="margin: 5px 0 0;">Desenvolvido por <a href="https://1way.pt" target="_blank" rel="noopener noreferrer" style="color: #0d47a1; text-decoration: none;">1way.pt</a></p>
+          </div>
+        </div>
         `,
-      });
+    });
       console.log('E-mail de confirmação enviado ao candidato:', infoCandidato.messageId);
     } catch (emailErrorCandidato) {
       console.error('Erro ao enviar e-mail de confirmação ao candidato:', emailErrorCandidato);
@@ -146,22 +161,44 @@ exports.sendCandidatura = async (req, res) => {
     // --- ENVIAR E-MAIL AO DONO/ADMIN DA EMPRESA ---
     try {
       const infoDono = await transporterGmail.sendMail({
-        from: process.env.GMAIL_USER,
-        to: process.env.GMAIL_USER,
+        from: `"JPC Rodrigues Website" <no-reply@jpcrodrigues.pt>`,
+        to: process.env.EMAIL_RECEIVER, // Certifique-se que EMAIL_RECEIVER está configurado no .env
         subject: `Nova Candidatura para a vaga: ${jobTitle}`,
         html: `
-          <p>Prezado(a) responsável,</p>
-          <p>Foi submetida uma nova candidatura através do website:</p>
-          <ul>
-            <li><b>Nome:</b> ${name}</li>
-            <li><b>Email:</b> ${email}</li>
-            <li><b>Telefone:</b> ${phone}</li>
-            <li><b>Vaga Candidatada:</b> ${jobTitle}</li>
-            <li><b>Mensagem do Candidato:</b> ${message || 'Não fornecida'}</li>
-          </ul>
-          <p>Por favor, verifique a candidatura e o CV em anexo no servidor (pasta 'uploads/cvs').</p>
-          <p>Atenciosamente,</p>
-          <p>Sistema de Candidaturas J. P. Rodrigues</p>
+          <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; border: 1px solid #ddd; border-radius: 8px; overflow: hidden;">
+            <div style="background-color: #0d47a1; padding: 20px; text-align: center; color: #ffffff;">
+              <h2 style="margin: 0; font-size: 24px;">Nova Candidatura Recebida</h2>
+              <p style="margin: 5px 0 0; font-size: 16px;">J. P. Rodrigues - Sistema de Candidaturas</p>
+            </div>
+
+            <div style="padding: 25px;">
+              <p style="font-size: 16px;">Prezado(a) responsável,</p>
+              <p style="font-size: 16px;">Foi submetida uma nova candidatura através do website para a seguinte vaga:</p>
+
+              <h3 style="color: #0d47a1; margin-top: 25px; margin-bottom: 10px; font-size: 18px;">Detalhes da Candidatura:</h3>
+              <ul style="list-style: none; padding: 0; margin: 0;">
+                <li style="margin-bottom: 8px;"><strong style="color: #0d47a1;">Vaga Candidatada:</strong> <span style="color: #555;">${jobTitle}</span></li>
+                <li style="margin-bottom: 8px;"><strong style="color: #0d47a1;">Nome:</strong> <span style="color: #555;">${name}</span></li>
+                <li style="margin-bottom: 8px;"><strong style="color: #0d47a1;">Email:</strong> <a href="mailto:${email}" style="color: #0d47a1; text-decoration: none;">${email}</a></li>
+                <li style="margin-bottom: 8px;"><strong style="color: #0d47a1;">Telefone:</strong> <a href="tel:${phone}" style="color: #0d47a1; text-decoration: none;">${phone}</a></li>
+              </ul>
+
+              <h3 style="color: #0d47a1; margin-top: 25px; margin-bottom: 10px; font-size: 18px;">Mensagem do Candidato:</h3>
+              <div style="background-color: #f0f0f0; border-left: 4px solid #0d47a1; padding: 15px; margin-bottom: 20px; font-style: italic; color: #555; border-radius: 4px;">
+                <p style="margin: 0;">${message || 'Não fornecida'}</p>
+              </div>
+
+              <p style="font-size: 16px;">O CV do candidato está em anexo a este email e também foi guardado no servidor, na pasta <code>uploads/cvs</code>.</p>
+
+              <p style="font-size: 16px; margin-top: 25px;">Atenciosamente,</p>
+              <p style="font-size: 16px; margin-bottom: 5px;">Sistema de Candidaturas J. P. Rodrigues</p>
+            </div>
+
+            <div style="border-top: 1px solid #eee; padding: 20px; text-align: center; background-color: #f9f9f9; font-size: 12px; color: #777;">
+              <p style="margin: 0;">Este é um e-mail de notificação automática.</p>
+              <p style="margin: 5px 0 0;">© 2025 JPC Rodrigues. Todos os direitos reservados.</p>
+            </div>
+          </div>
         `,
         attachments: cvPath ? [
           {

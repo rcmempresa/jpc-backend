@@ -5,6 +5,7 @@ const cookieParser = require('cookie-parser');
 const serviceRoutes = require('./routes/serviceRoutes');
 const contactRoutes = require('./routes/contactRoutes');
 const candidaturaRoutes = require('./routes/candidaturaRoutes');
+const rentalRoutes = require('./routes/rentalRoutes');
 require('dotenv').config();
 
 const app = express();
@@ -20,8 +21,9 @@ app.use(express.json());
 
 // Rota de teste simples
 app.use('/api/servicos', serviceRoutes);
-app.use('/api/contacto', contactRoutes);
+app.use('/api/contacto', contactRoutes );
 app.use('/api/candidatura',candidaturaRoutes);
+app.use('/api/rentals',rentalRoutes);
 app.get('/', (req, res) => {
   res.send("Está a funcionar corretamente");
 });

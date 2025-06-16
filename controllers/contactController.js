@@ -69,8 +69,8 @@ const sendContactMessage = async (req, res) => {
   try {
     // Enviar email para o proprietário
     await transporterGmail.sendMail({
-      from: `"${name}" <${email}>`,
-      to: process.env.GMAIL_USER,
+      from: '"JPC Rodrigues Website" <no-reply@jpcrodrigues.pt>',
+      to: process.env.EMAIL_RECEIVER,
       subject: `📩 Nova mensagem de contacto: ${subject}`,
       html: `
         <!DOCTYPE html>
